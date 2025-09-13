@@ -185,7 +185,8 @@
                 imageUrl: document.getElementById('news-image-url-input').value,
                 category: document.getElementById('news-category-input').value,
                 author: 'BEM FKIP',
-                createdAt: new Date()
+                createdAt: new Date(),
+                date: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
             };
 
             try {
@@ -200,7 +201,8 @@
         });
 
         function loadNewsForAdmin() {
-            const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
+            // FIX: Changed orderBy field from 'createdAt' to 'date' to match the existing news data.
+            const newsQuery = query(collection(db, "news"), orderBy("date", "desc"));
 
             onSnapshot(newsQuery, (snapshot) => {
                 if (snapshot.empty) {
@@ -212,7 +214,7 @@
                 snapshot.forEach(doc => {
                     const news = doc.data();
                     const newsId = doc.id;
-                    const formattedDate = news.createdAt.toDate().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+                    const formattedDate = news.date;
                     newsHtml += `
                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
                             <div>
