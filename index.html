@@ -96,8 +96,8 @@
                     <a href="struktural.html" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Struktural Kabinet</a>
                     <a href="kontak.html" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Kontak</a>
 
-                    <a href="admin.html" id="login-btn" class="bg-violet-500 text-white px-3 py-1 rounded-md text-sm font-medium">Login</a>
-                    <a href="admin.html" id="dashboard-btn" class="hidden bg-green-500 text-white px-3 py-1 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="/admin" id="login-btn" class="bg-violet-500 text-white px-3 py-1 rounded-md text-sm font-medium">Login</a>
+                    <a href="/admin" id="dashboard-btn" class="hidden bg-green-500 text-white px-3 py-1 rounded-md text-sm font-medium">Dashboard</a>
                     <a href="#" id="logout-btn" class="hidden bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium">Logout</a>
                     </div>
             </nav>
@@ -185,139 +185,117 @@
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } 
             from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // This listener ensures the code runs only after the full page is loaded.
-        document.addEventListener('DOMContentLoaded', () => {
-            const firebaseConfig = {
-                apiKey: "AIzaSyAK2s6ex4tj7ycOPiEqb_bnatojCFCTMzg",
-                authDomain: "bemfkip-a5bb1.firebaseapp.com",
-                projectId: "bemfkip-a5bb1",
-                storageBucket: "bemfkip-a5bb1.firebasestorage.app",
-                messagingSenderId: "717492980350",
-                appId: "1:717492980350:web:e602c64e54d616daf2a62f"
+        // Firebase configuration and initialization
+        const firebaseConfig = {
+            apiKey: "AIzaSyAK2s6ex4tj7ycOPiEqb_bnatojCFCTMzg",
+            authDomain: "bemfkip-a5bb1.firebaseapp.com",
+            projectId: "bemfkip-a5bb1",
+            storageBucket: "bemfkip-a5bb1.firebasestorage.app",
+            messagingSenderId: "717492980350",
+            appId: "1:717492980350:web:e602c64e54d616daf2a62f"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // --- Get All Needed Elements ---
+        const messageModal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const newsFormModal = document.getElementById('news-form-modal');
+        const addNewsForm = document.getElementById('add-news-form');
+        const closeFormBtn = document.getElementById('close-form-btn');
+        const addNewsBtn = document.getElementById('add-news-btn');
+        const addNewsBtnContainer = document.getElementById('add-news-btn-container');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const dashboardBtn = document.getElementById('dashboard-btn'); // New element
+        
+        // --- Authentication State Checker ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is logged in
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                dashboardBtn.classList.remove('hidden'); // Show dashboard button
+                addNewsBtnContainer.classList.remove('hidden');
+            } else {
+                // User is logged out
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                dashboardBtn.classList.add('hidden'); // Hide dashboard button
+                addNewsBtnContainer.classList.add('hidden');
+            }
+        });
+
+        // --- Logout Button Functionality ---
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut(auth).catch((error) => console.error("Sign Out Error", error));
+        });
+
+        // --- Modal and Form Logic ---
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.classList.remove('hidden');
+        }
+        modalCloseBtn.addEventListener('click', () => messageModal.classList.add('hidden'));
+        addNewsBtn.addEventListener('click', () => newsFormModal.classList.remove('hidden'));
+        closeFormBtn.addEventListener('click', () => newsFormModal.classList.add('hidden'));
+
+        addNewsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newsData = {
+                title: document.getElementById('news-title-input').value,
+                content: document.getElementById('news-content-input').value,
+                imageUrl: document.getElementById('news-image-url-input').value,
+                category: document.getElementById('news-category-input').value,
+                author: 'BEM FKIP',
+                date: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
             };
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            const auth = getAuth(app);
-            
-            // --- Get All Needed Elements ---
-            const messageModal = document.getElementById('message-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalMessage = document.getElementById('modal-message');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const newsFormModal = document.getElementById('news-form-modal');
-            const addNewsForm = document.getElementById('add-news-form');
-            const closeFormBtn = document.getElementById('close-form-btn');
-            const addNewsBtn = document.getElementById('add-news-btn');
-            const addNewsBtnContainer = document.getElementById('add-news-btn-container');
-            const logoutBtn = document.getElementById('logout-btn');
-            const loginBtn = document.getElementById('login-btn');
-            const dashboardBtn = document.getElementById('dashboard-btn');
-            const newsContainer = document.getElementById('news-container');
-            
-            // --- Authentication State Checker ---
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // User is logged in
-                    if (loginBtn && logoutBtn && dashboardBtn && addNewsBtnContainer) {
-                        loginBtn.classList.add('hidden');
-                        logoutBtn.classList.remove('hidden');
-                        dashboardBtn.classList.remove('hidden');
-                        addNewsBtnContainer.classList.remove('hidden');
-                    }
-                } else {
-                    // User is logged out
-                    if (loginBtn && logoutBtn && dashboardBtn && addNewsBtnContainer) {
-                        loginBtn.classList.remove('hidden');
-                        logoutBtn.classList.add('hidden');
-                        dashboardBtn.classList.add('hidden');
-                        addNewsBtnContainer.classList.add('hidden');
-                    }
-                }
+            try {
+                await addDoc(collection(db, "news"), newsData);
+                newsFormModal.classList.add('hidden');
+                addNewsForm.reset();
+                showModal("Berhasil!", "Berita baru telah ditambahkan.");
+            } catch (err) {
+                console.error("Error adding document: ", err);
+                showModal("Error", "Gagal menambahkan berita.");
+            }
+        });
+
+        // --- Display News from Firestore ---
+        const newsContainer = document.getElementById('news-container');
+        const newsQuery = query(collection(db, "news"), orderBy("date", "desc"));
+        onSnapshot(newsQuery, (snapshot) => {
+            if (snapshot.empty) {
+                newsContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada berita.</p>';
+                return;
+            }
+            let newsHtml = '';
+            snapshot.forEach((doc) => {
+                const news = doc.data();
+                newsHtml += `
+                    <a href="news-detail.html?id=${doc.id}" class="block rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden bg-white text-gray-800">
+                        <div class="relative">
+                            <img class="w-full h-48 object-cover" src="${news.imageUrl}" alt="${news.title}">
+                            <span class="absolute top-2 left-2 bg-violet-600 text-white px-2 py-1 text-xs font-semibold rounded-full">${news.category}</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">${news.title}</h3>
+                            <div class="flex items-center text-sm font-medium text-gray-500 mb-4 space-x-4">
+                                <span>${news.date}</span>
+                                <span>by ${news.author}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">${news.content.substring(0, 100)}...</p>
+                            <span class="inline-block mt-4 text-violet-600 font-semibold">Continue reading →</span>
+                        </div>
+                    </a>
+                `;
             });
-
-            // --- Logout Button Functionality ---
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    signOut(auth).catch((error) => console.error("Sign Out Error", error));
-                });
-            }
-
-            // --- Modal and Form Logic ---
-            function showModal(title, message) {
-                if (modalTitle && modalMessage && messageModal) {
-                    modalTitle.textContent = title;
-                    modalMessage.textContent = message;
-                    messageModal.classList.remove('hidden');
-                }
-            }
-            if (modalCloseBtn) {
-                modalCloseBtn.addEventListener('click', () => messageModal.classList.add('hidden'));
-            }
-            if (addNewsBtn) {
-                addNewsBtn.addEventListener('click', () => newsFormModal.classList.remove('hidden'));
-            }
-            if (closeFormBtn) {
-                closeFormBtn.addEventListener('click', () => newsFormModal.classList.add('hidden'));
-            }
-
-            if (addNewsForm) {
-                addNewsForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const newsData = {
-                        title: document.getElementById('news-title-input').value,
-                        content: document.getElementById('news-content-input').value,
-                        imageUrl: document.getElementById('news-image-url-input').value,
-                        category: document.getElementById('news-category-input').value,
-                        author: 'BEM FKIP',
-                        createdAt: new Date(), // Using a timestamp for sorting
-                        date: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
-                    };
-                    try {
-                        await addDoc(collection(db, "news"), newsData);
-                        newsFormModal.classList.add('hidden');
-                        addNewsForm.reset();
-                        showModal("Berhasil!", "Berita baru telah ditambahkan.");
-                    } catch (err) {
-                        console.error("Error adding document: ", err);
-                        showModal("Error", "Gagal menambahkan berita.");
-                    }
-                });
-            }
-
-            // --- Display News from Firestore ---
-            const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
-
-            if (newsContainer) {
-                onSnapshot(newsQuery, (snapshot) => {
-                    if (snapshot.empty) {
-                        newsContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada berita.</p>';
-                        return;
-                    }
-                    let newsHtml = '';
-                    snapshot.forEach((doc) => {
-                        const news = doc.data();
-                        newsHtml += `
-                            <a href="news-detail.html?id=${doc.id}" class="block rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden bg-white text-gray-800">
-                                <div class="relative">
-                                    <img class="w-full h-48 object-cover" src="${news.imageUrl}" alt="${news.title}">
-                                    <span class="absolute top-2 left-2 bg-violet-600 text-white px-2 py-1 text-xs font-semibold rounded-full">${news.category}</span>
-                                </div>
-                                <div class="p-6">
-                                    <h3 class="font-bold text-xl mb-2">${news.title}</h3>
-                                    <div class="flex items-center text-sm font-medium text-gray-500 mb-4 space-x-4">
-                                        <span>${news.date}</span>
-                                        <span>by ${news.author}</span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 leading-relaxed">${news.content.substring(0, 100)}...</p>
-                                    <span class="inline-block mt-4 text-violet-600 font-semibold">Continue reading →</span>
-                                </div>
-                            </a>
-                        `;
-                    });
-                    newsContainer.innerHTML = newsHtml;
-                });
-            }
+            newsContainer.innerHTML = newsHtml;
         });
     </script>
 </body>
