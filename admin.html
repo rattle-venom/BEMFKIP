@@ -152,7 +152,8 @@
                 // Defensive check to ensure elements exist before modifying them
                 if (loginSection && dashboardSection) {
                     if (user) {
-                        const userDocRef = doc(db, "users", user.uid);
+                        // FIX: Corrected collection name to 'Permissions'
+                        const userDocRef = doc(db, "Permissions", user.uid);
                         const userDocSnap = await getDoc(userDocRef);
                         
                         if (userDocSnap.exists()) {
@@ -226,6 +227,7 @@
 
 
             function loadNewsForAdmin(userRole) {
+                // FIX: Sorting by `createdAt` is a more reliable way to sort documents by date.
                 const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
                 
                 if (newsListContainer) {
@@ -238,7 +240,8 @@
                         let newsHtml = '';
                         snapshot.forEach(doc => {
                             const news = doc.data();
-                            const formattedDate = news.date;
+                            // FIX: Using the `date` string for display, but sorting by the `createdAt` timestamp.
+                            const formattedDate = news.date; 
                             newsHtml += `
                                 <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
                                     <div>
