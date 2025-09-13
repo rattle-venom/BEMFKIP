@@ -66,7 +66,7 @@
                         <input type="text" id="news-category-input" required value="Berita" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-violet-500 focus:border-violet-500">
                     </div>
                     <div>
-                        <button type="submit" class="w-full px-4 py-2 font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700">
+                        <button type="submit" class="w-full px-4 py-2 font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">
                             Simpan Berita
                         </button>
                     </div>
@@ -213,7 +213,7 @@
         });
 
         function loadNewsForAdmin(userRole) {
-            const newsQuery = query(collection(db, "news"), orderBy("date", "desc"));
+            const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
 
             onSnapshot(newsQuery, (snapshot) => {
                 if (snapshot.empty) {
@@ -224,7 +224,6 @@
                 let newsHtml = '';
                 snapshot.forEach(doc => {
                     const news = doc.data();
-                    const newsId = doc.id;
                     const formattedDate = news.date;
                     newsHtml += `
                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
@@ -234,12 +233,12 @@
                             </div>
                             <div class="flex space-x-2">
                                 ${userRole === 'admin' ? `
-                                    <button data-id="${newsId}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
-                                    <button data-id="${newsId}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
+                                    <button data-id="${doc.id}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
+                                    <button data-id="${doc.id}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
                                 ` : ''}
                                 
                                 ${userRole === 'editor' ? `
-                                    <button data-id="${newsId}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
+                                    <button data-id="${doc.id}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
                                 ` : ''}
                             </div>
                         </div>
