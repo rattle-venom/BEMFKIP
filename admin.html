@@ -11,7 +11,7 @@
 </head>
 <body class="bg-gray-100">
 
-    <div id="login-section" class="flex items-center justify-center h-screen">
+    <div id="login-section" class="flex items-center justify-center h-screen hidden">
         <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
             <div class="text-center">
                 <img src="logo-bem.JPG" alt="Logo BEM FKIP UMM" class="w-20 h-20 mx-auto rounded-full">
@@ -39,7 +39,10 @@
     <div id="dashboard-section" class="hidden container mx-auto p-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-            <a href="index.html" id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600">Logout</a>
+            <div class="flex space-x-2">
+                <a href="index.html" class="bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-600">View Site</a>
+                <a href="#" id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-600">Logout</a>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -133,6 +136,9 @@
             const password = passwordInput.value;
 
             signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    window.location.href = 'index.html'; // Redirect to main page on successful login
+                })
                 .catch((error) => {
                     console.error("Login Error:", error);
                     errorMessage.textContent = "Email atau password salah. Silakan coba lagi.";

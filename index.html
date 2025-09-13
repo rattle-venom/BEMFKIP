@@ -97,8 +97,9 @@
                     <a href="kontak.html" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Kontak</a>
 
                     <a href="admin.html" id="login-btn" class="bg-violet-500 text-white px-3 py-1 rounded-md text-sm font-medium">Login</a>
+                    <a href="admin.html" id="dashboard-btn" class="hidden bg-green-500 text-white px-3 py-1 rounded-md text-sm font-medium">Dashboard</a>
                     <a href="#" id="logout-btn" class="hidden bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium">Logout</a>
-                </div>
+                    </div>
             </nav>
         </header>
 
@@ -209,20 +210,21 @@
         const addNewsBtnContainer = document.getElementById('add-news-btn-container');
         const logoutBtn = document.getElementById('logout-btn');
         const loginBtn = document.getElementById('login-btn');
-        const adminBar = document.getElementById('admin-bar');
-        const adminAddNewsLink = document.getElementById('admin-add-news-link');
-
+        const dashboardBtn = document.getElementById('dashboard-btn'); // New element
+        
         // --- Authentication State Checker ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // User is logged in
                 loginBtn.classList.add('hidden');
                 logoutBtn.classList.remove('hidden');
+                dashboardBtn.classList.remove('hidden'); // Show dashboard button
                 addNewsBtnContainer.classList.remove('hidden');
             } else {
                 // User is logged out
                 loginBtn.classList.remove('hidden');
                 logoutBtn.classList.add('hidden');
+                dashboardBtn.classList.add('hidden'); // Hide dashboard button
                 addNewsBtnContainer.classList.add('hidden');
             }
         });
