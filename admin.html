@@ -226,8 +226,8 @@
 
 
             function loadNewsForAdmin(userRole) {
-                const newsQuery = query(collection(db, "news"), orderBy("date", "desc"));
-
+                const newsQuery = query(collection(db, "news"), orderBy("createdAt", "desc"));
+                
                 if (newsListContainer) {
                     onSnapshot(newsQuery, (snapshot) => {
                         if (snapshot.empty) {
