@@ -146,11 +146,23 @@
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
         // --- AUTHENTICATION LOGIC ---
-        onAuthStateChanged(auth, user => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                loginSection.classList.add('hidden');
-                dashboardSection.classList.remove('hidden');
-                loadNewsForAdmin();
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    const userRole = userData.role;
+
+                    loginSection.classList.add('hidden');
+                    dashboardSection.classList.remove('hidden');
+                    loadNewsForAdmin(userRole);
+
+                } else {
+                    signOut(auth);
+                    errorMessage.textContent = "Akses tidak diizinkan. Silakan hubungi admin.";
+                }
             } else {
                 loginSection.classList.remove('hidden');
                 dashboardSection.classList.add('hidden');
@@ -193,15 +205,14 @@
                 await addDoc(collection(db, "news"), newsData);
                 addNewsForm.reset();
                 successMessage.textContent = "Berita baru telah berhasil ditambahkan!";
-                setTimeout(() => { successMessage.textContent = ''; }, 3000);
+                setTimeout(() => { successMessage.textContent = '', errorMessage.textContent = ''; }, 3000);
             } catch (err) {
                 console.error("Error adding document: ", err);
                 errorMessage.textContent = "Gagal menambahkan berita.";
             }
         });
 
-        function loadNewsForAdmin() {
-            // FIX: Changed orderBy field from 'createdAt' to 'date' to match the existing news data.
+        function loadNewsForAdmin(userRole) {
             const newsQuery = query(collection(db, "news"), orderBy("date", "desc"));
 
             onSnapshot(newsQuery, (snapshot) => {
@@ -222,8 +233,14 @@
                                 <p class="text-sm text-gray-500">${formattedDate}</p>
                             </div>
                             <div class="flex space-x-2">
-                                <button data-id="${newsId}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
-                                <button data-id="${newsId}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
+                                ${userRole === 'admin' ? `
+                                    <button data-id="${newsId}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
+                                    <button data-id="${newsId}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
+                                ` : ''}
+                                
+                                ${userRole === 'editor' ? `
+                                    <button data-id="${newsId}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
+                                ` : ''}
                             </div>
                         </div>
                     `;
