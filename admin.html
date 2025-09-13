@@ -84,9 +84,11 @@
     </div>
 
     <script type="module">
+        // --- START: MODIFIED IMPORT SECTION ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // --- END: MODIFIED IMPORT SECTION ---
 
         // Your Firebase config
         const firebaseConfig = {
@@ -197,15 +199,34 @@
                                 <p class="text-sm text-gray-500">${news.date}</p>
                             </div>
                             <div class="flex space-x-2">
-                                <button class="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
-                                <button class="text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
-                            </div>
+                                <button data-id="${newsId}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">Edit</button>
+                                <button data-id="${newsId}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
+                                </div>
                         </div>
                     `;
                 });
                 newsListContainer.innerHTML = newsHtml;
             });
         }
+
+        // --- START: NEW DELETE FUNCTIONALITY ---
+        newsListContainer.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                const newsId = e.target.dataset.id;
+                
+                // Confirmation dialog
+                if (confirm("Apakah Anda yakin ingin menghapus berita ini?")) {
+                    try {
+                        await deleteDoc(doc(db, "news", newsId));
+                        // The onSnapshot listener will automatically refresh the list
+                    } catch (error) {
+                        console.error("Error deleting document: ", error);
+                        alert("Gagal menghapus berita.");
+                    }
+                }
+            }
+        });
+        // --- END: NEW DELETE FUNCTIONALITY ---
     </script>
 
 </body>
