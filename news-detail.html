@@ -55,7 +55,7 @@
 
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-             <a href="index.html" class="flex items-center space-x-2 text-2xl font-bold text-violet-600" style="font-family: 'Poppins', sans-serif;">
+             <a href="/index" class="flex items-center space-x-2 text-2xl font-bold text-violet-600" style="font-family: 'Poppins', sans-serif;">
                 <img src="logo-bem.JPG" alt="Logo BEM FKIP UMM" class="h-14 w-14 rounded-full">
                 <span>BEM FKIP UMM</span>
             </a>
@@ -71,7 +71,7 @@
             <div id="news-content">
                 <p>Silakan tunggu...</p>
             </div>
-            <a href="index.html" class="inline-block mt-8 text-violet-600 hover:underline" style="font-family: 'Poppins', sans-serif;">&larr; Kembali ke semua berita</a>
+            <a href="/index" class="inline-block mt-8 text-violet-600 hover:underline" style="font-family: 'Poppins', sans-serif;">&larr; Kembali ke semua berita</a>
         </div>
     </main>
 
@@ -94,6 +94,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // START: NEW SANITIZER FUNCTION
+        // This function takes a string and replaces HTML characters with safe ones
+        function sanitizeHTML(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+        // END: NEW SANITIZER FUNCTION
+
         async function loadArticle() {
             const urlParams = new URLSearchParams(window.location.search);
             const newsId = urlParams.get('id');
@@ -111,14 +118,17 @@
                     const news = docSnap.data();
                     
                     document.title = news.title + " - BEM FKIP UMM";
-                    document.getElementById('news-title').textContent = news.title;
+                    document.getElementById('news-title').textContent = news.title; // .textContent is already safe
                     document.getElementById('news-image').src = news.imageUrl;
                     document.getElementById('news-image').alt = news.title;
                     document.getElementById('news-meta').innerHTML = `<span>By ${news.author}</span> &bull; <span>${news.date}</span>`;
 
+                    // START: UPDATED CONTENT HANDLING
                     const paragraphsArray = news.content.split('\n').filter(p => p.trim() !== '');
-                    const contentHtml = paragraphsArray.map(p => `<p>${p.trim()}</p>`).join('');
+                    // We now use the sanitizeHTML function on each paragraph to make it safe
+                    const contentHtml = paragraphsArray.map(p => `<p>${sanitizeHTML(p.trim())}</p>`).join('');
                     document.getElementById('news-content').innerHTML = contentHtml;
+                    // END: UPDATED CONTENT HANDLING
                     
                 } else {
                      document.getElementById('article-container').innerHTML = '<h1>Artikel tidak ditemukan.</h1><p>Tidak ada berita dengan ID ini.</p>';
