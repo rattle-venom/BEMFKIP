@@ -28,7 +28,7 @@
                 <a href="/admin" id="login-btn" class="bg-violet-500 text-white px-3 py-1 rounded-md text-sm font-medium">Login</a>
                 <a href="/admin" id="dashboard-btn" class="hidden bg-green-500 text-white px-3 py-1 rounded-md text-sm font-medium">Dashboard</a>
                 <a href="#" id="logout-btn" class="hidden bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium">Logout</a>
-                </div>
+            </div>
         </nav>
     </header>
 
@@ -51,6 +51,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAK2s6ex4tj7ycOPiEqb_bnatojCFCTMzg",
@@ -62,6 +63,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         
         const logoutBtn = document.getElementById('logout-btn');
         const loginBtn = document.getElementById('login-btn');
@@ -84,7 +86,31 @@
             signOut(auth).catch((error) => console.error("Sign Out Error", error));
         });
 
-        // We will add the gallery loading script here later
+        // --- START: ADDED GALLERY LOADING SCRIPT ---
+        const galleryContainer = document.getElementById('gallery-container');
+        const galleryQuery = query(collection(db, "gallery"), orderBy("uploadedAt", "desc"));
+        
+        onSnapshot(galleryQuery, (snapshot) => {
+            if (snapshot.empty) {
+                galleryContainer.innerHTML = '<p class="col-span-full text-gray-500">Belum ada foto di galeri.</p>';
+                return;
+            }
+            let photosHtml = '';
+            snapshot.forEach(doc => {
+                const photo = doc.data();
+                photosHtml += `
+                    <div class="relative group">
+                        <img src="${photo.imageUrl}" alt="${photo.caption}" class="w-full h-48 object-cover rounded-lg shadow-md transition-transform transform group-hover:scale-105">
+                        <div class="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-50 text-white text-xs text-center rounded-b-lg">
+                            ${photo.caption}
+                        </div>
+                    </div>
+                `;
+            });
+            galleryContainer.innerHTML = photosHtml;
+        });
+        // --- END: ADDED GALLERY LOADING SCRIPT ---
     </script>
-    </body>
+
+</body>
 </html>
