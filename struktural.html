@@ -33,18 +33,17 @@
                     <a href="/galeri" class="text-gray-600 hover:text-violet-600 font-medium">Galeri</a>
                     <a href="/struktural" class="text-violet-600 font-bold">Struktural Kabinet</a>
                     <a href="/kontak" class="text-gray-600 hover:text-violet-600 font-medium">Kontak</a>
-                </div>
+                    <a href="/admin" id="login-btn" class="bg-violet-500 text-white px-3 py-1 rounded-md text-sm font-medium">Login</a>
+                    <a href="/admin" id="dashboard-btn" class="hidden bg-green-500 text-white px-3 py-1 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="#" id="logout-btn" class="hidden bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium">Logout</a>
+                    </div>
             </nav>
         </header>
 
         <section class="bg-violet-600 text-white py-16 px-4 text-center">
             <div class="container mx-auto">
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4">
-                    Struktur Kabinet
-                </h1>
-                <p class="text-lg sm:text-xl font-light max-w-2xl mx-auto">
-                    Mengenal para pemimpin dan anggota yang menggerakkan BEM FKIP UMM.
-                </p>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4">Struktur Kabinet</h1>
+                <p class="text-lg sm:text-xl font-light max-w-2xl mx-auto">Mengenal para pemimpin dan anggota yang menggerakkan BEM FKIP UMM.</p>
             </div>
         </section>
 
@@ -114,6 +113,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -125,7 +125,31 @@
             appId: "1:717492980350:web:e602c64e54d616daf2a62f"
         };
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // START: ADDED AUTH LOGIC
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const dashboardBtn = document.getElementById('dashboard-btn');
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                dashboardBtn.classList.remove('hidden');
+            } else {
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                dashboardBtn.classList.add('hidden');
+            }
+        });
+
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut(auth).catch((error) => console.error("Sign Out Error", error));
+        });
+        // END: ADDED AUTH LOGIC
 
         async function loadCabinet() {
             const docRef = doc(db, "cabinet", "current_cabinet");
