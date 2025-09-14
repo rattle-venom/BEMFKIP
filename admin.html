@@ -60,7 +60,29 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Tambah Berita Baru</h2>
                 <form id="add-news-form" class="space-y-4">
-                    </form>
+                     <div>
+                        <label for="news-title-input" class="block text-sm font-medium text-gray-700">Judul Berita</label>
+                        <input type="text" id="news-title-input" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="news-content-input" class="block text-sm font-medium text-gray-700">Isi Berita</label>
+                        <textarea id="news-content-input" rows="6" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                    </div>
+                    <div>
+                        <label for="news-image-url-input" class="block text-sm font-medium text-gray-700">URL Gambar</label>
+                        <input type="url" id="news-image-url-input" required placeholder="https://contoh.com/gambar.jpg" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                     <div>
+                        <label for="news-category-input" class="block text-sm font-medium text-gray-700">Kategori</label>
+                        <input type="text" id="news-category-input" required value="Berita" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full px-4 py-2 font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700">
+                            Simpan Berita
+                        </button>
+                    </div>
+                </form>
+                 <p id="success-message" class="text-sm text-center text-green-600 mt-4"></p>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Kelola Berita</h2>
@@ -72,7 +94,21 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Tambah Foto Baru</h2>
                 <form id="add-photo-form" class="space-y-4">
-                    </form>
+                    <div>
+                        <label for="photo-url-input" class="block text-sm font-medium text-gray-700">URL Gambar</label>
+                        <input type="url" id="photo-url-input" required placeholder="Paste the direct image link here" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="photo-caption-input" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                        <input type="text" id="photo-caption-input" required placeholder="Contoh: Seminar Nasional 2025" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full px-4 py-2 font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700">
+                            Simpan Foto
+                        </button>
+                    </div>
+                </form>
+                <div id="add-photo-status" class="text-sm text-center mt-4"></div>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Kelola Galeri</h2>
@@ -111,6 +147,7 @@
             </form>
         </div>
     </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -137,16 +174,12 @@
         const tabGalleryBtn = document.getElementById('tab-gallery');
         const contentNews = document.getElementById('content-news');
         const contentGallery = document.getElementById('content-gallery');
-        
-        // News Elements
         const addNewsForm = document.getElementById('add-news-form');
         const successMessage = document.getElementById('success-message');
         const newsListContainer = document.getElementById('news-list-container');
         const editNewsModal = document.getElementById('edit-news-modal');
         const editNewsForm = document.getElementById('edit-news-form');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
-
-        // Gallery Elements
         const addPhotoForm = document.getElementById('add-photo-form');
         const addPhotoStatus = document.getElementById('add-photo-status');
         const galleryListContainer = document.getElementById('gallery-list-container');
@@ -158,7 +191,6 @@
             tabNewsBtn.classList.add('text-violet-600', 'border-violet-600');
             tabGalleryBtn.classList.remove('text-violet-600', 'border-violet-600');
         });
-
         tabGalleryBtn.addEventListener('click', () => {
             contentNews.classList.add('hidden');
             contentGallery.classList.remove('hidden');
@@ -178,12 +210,32 @@
                 dashboardSection.classList.add('hidden');
             }
         });
-
-        loginForm.addEventListener('submit', (e) => { /* ... */ });
-        logoutBtn.addEventListener('click', (e) => { /* ... */ });
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            signInWithEmailAndPassword(auth, e.target.elements['email-input'].value, e.target.elements['password-input'].value)
+                .then(() => { window.location.href = '/index'; })
+                .catch((error) => { document.getElementById('error-message').textContent = "Email atau password salah."; });
+        });
+        logoutBtn.addEventListener('click', (e) => { e.preventDefault(); signOut(auth); });
 
         // --- NEWS MANAGEMENT ---
-        addNewsForm.addEventListener('submit', async (e) => { /* ... */ });
+        addNewsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newsData = {
+                title: e.target.elements['news-title-input'].value,
+                content: e.target.elements['news-content-input'].value,
+                imageUrl: e.target.elements['news-image-url-input'].value,
+                category: e.target.elements['news-category-input'].value,
+                author: 'BEM FKIP',
+                date: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+            };
+            try {
+                await addDoc(collection(db, "news"), newsData);
+                addNewsForm.reset();
+                successMessage.textContent = "Berita berhasil ditambahkan!";
+                setTimeout(() => { successMessage.textContent = ''; }, 3000);
+            } catch (err) { alert("Gagal menambahkan berita."); }
+        });
         function loadNewsForAdmin() {
             const newsQuery = query(collection(db, "news"), orderBy("date", "desc"));
             onSnapshot(newsQuery, (snapshot) => {
@@ -191,27 +243,81 @@
                 if (snapshot.empty) { newsListContainer.innerHTML = '<p>Belum ada berita.</p>'; return; }
                 snapshot.forEach(doc => {
                     const news = doc.data();
-                    newsHtml += `
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-                            <div><p class="font-semibold">${news.title}</p><p class="text-sm text-gray-500">${news.date}</p></div>
-                            <div class="flex space-x-2">
-                                <button data-id="${doc.id}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md">Edit</button>
-                                <button data-id="${doc.id}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md">Delete</button>
-                            </div>
-                        </div>`;
+                    newsHtml += `<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"><div><p class="font-semibold">${news.title}</p><p class="text-sm text-gray-500">${news.date}</p></div><div class="flex space-x-2"><button data-id="${doc.id}" class="edit-btn text-sm bg-blue-500 text-white px-3 py-1 rounded-md">Edit</button><button data-id="${doc.id}" class="delete-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md">Delete</button></div></div>`;
                 });
                 newsListContainer.innerHTML = newsHtml;
             });
         }
-        newsListContainer.addEventListener('click', async (e) => { /* ... edit/delete logic ... */ });
-        editNewsForm.addEventListener('submit', async (e) => { /* ... */ });
-        cancelEditBtn.addEventListener('click', () => { /* ... */ });
+        newsListContainer.addEventListener('click', async (e) => {
+            const newsId = e.target.dataset.id;
+            if (!newsId) return;
+            if (e.target.classList.contains('delete-btn')) {
+                if (confirm("Yakin ingin menghapus berita ini?")) {
+                    await deleteDoc(doc(db, "news", newsId));
+                }
+            }
+            if (e.target.classList.contains('edit-btn')) {
+                const docRef = doc(db, "news", newsId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const news = docSnap.data();
+                    editNewsForm.elements['edit-news-id'].value = newsId;
+                    editNewsForm.elements['edit-news-title'].value = news.title;
+                    editNewsForm.elements['edit-news-content'].value = news.content;
+                    editNewsForm.elements['edit-news-image'].value = news.imageUrl;
+                    editNewsForm.elements['edit-news-category'].value = news.category;
+                    editNewsModal.classList.remove('hidden');
+                }
+            }
+        });
+        editNewsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newsId = e.target.elements['edit-news-id'].value;
+            const updatedData = {
+                title: e.target.elements['edit-news-title'].value,
+                content: e.target.elements['edit-news-content'].value,
+                imageUrl: e.target.elements['edit-news-image'].value,
+                category: e.target.elements['edit-news-category'].value,
+            };
+            await updateDoc(doc(db, "news", newsId), updatedData);
+            editNewsModal.classList.add('hidden');
+        });
+        cancelEditBtn.addEventListener('click', () => { editNewsModal.classList.add('hidden'); });
 
         // --- GALLERY MANAGEMENT ---
-        addPhotoForm.addEventListener('submit', async (e) => { /* ... */ });
-        function loadGalleryForAdmin() { /* ... */ }
-        galleryListContainer.addEventListener('click', async (e) => { /* ... */ });
-
+        addPhotoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const photoData = {
+                imageUrl: e.target.elements['photo-url-input'].value,
+                caption: e.target.elements['photo-caption-input'].value,
+                uploadedAt: new Date()
+            };
+            try {
+                await addDoc(collection(db, "gallery"), photoData);
+                addPhotoStatus.textContent = "Foto berhasil ditambahkan!";
+                addPhotoForm.reset();
+                setTimeout(() => { addPhotoStatus.textContent = ''; }, 3000);
+            } catch (error) { addPhotoStatus.textContent = "Gagal menambahkan foto."; }
+        });
+        function loadGalleryForAdmin() {
+            const galleryQuery = query(collection(db, "gallery"), orderBy("uploadedAt", "desc"));
+            onSnapshot(galleryQuery, (snapshot) => {
+                let photosHtml = '';
+                if (snapshot.empty) { galleryListContainer.innerHTML = '<p>Belum ada foto di galeri.</p>'; return; }
+                snapshot.forEach(doc => {
+                    const photo = doc.data();
+                    photosHtml += `<div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg border"><img src="${photo.imageUrl}" class="w-12 h-12 object-cover rounded-md mr-4"><p class="font-semibold text-sm flex-grow">${photo.caption}</p><button data-id="${doc.id}" class="delete-photo-btn text-sm bg-red-500 text-white px-3 py-1 rounded-md">Delete</button></div>`;
+                });
+                galleryListContainer.innerHTML = photosHtml;
+            });
+        }
+        galleryListContainer.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-photo-btn')) {
+                if (confirm("Yakin ingin menghapus foto ini?")) {
+                    await deleteDoc(doc(db, "gallery", e.target.dataset.id));
+                }
+            }
+        });
     </script>
 </body>
 </html>
