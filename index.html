@@ -74,32 +74,20 @@
     <div class="flex flex-col min-h-screen">
         <header class="bg-white shadow-sm sticky top-0 z-40">
             <nav class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
-                <a href="index.html" class="flex items-center space-x-2 text-2xl font-bold text-violet-600">
+                <a href="/index" class="flex items-center space-x-2 text-2xl font-bold text-violet-600">
                     <img src="logo-bem.JPG" alt="Logo BEM FKIP UMM" class="h-14 w-14 rounded-full">
                     <span>BEM FKIP UMM</span>
                 </a>
                 <div class="flex items-center flex-grow justify-center sm:justify-end mt-4 sm:mt-0 space-x-4">
-                    <div class="relative dropdown">
-                        <a href="#tentang" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">
-                            Tentang Kami
-                            <span class="ml-1">&#9660;</span>
-                        </a>
-                        <div class="dropdown-menu hidden absolute bg-white text-gray-700 py-2 rounded-lg shadow-xl mt-2 w-48 z-50">
-                            <a href="#tentang" class="block px-4 py-2 hover:bg-gray-100">Profil</a>
-                            <a href="#galeri" class="block px-4 py-2 hover:bg-gray-100">Visi & Misi</a>
-                            <a href="struktural.html" class="block px-4 py-2 hover:bg-gray-100">Struktur Organisasi</a>
-                        </div>
-                    </div>
-                    
-                    <a href="#berita" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Berita</a>
-                    <a href="#galeri" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Galeri</a>
-                    <a href="struktural.html" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Struktural Kabinet</a>
-                    <a href="kontak.html" class="text-gray-600 hover:text-violet-600 font-medium transition-colors hidden sm:block">Kontak</a>
-
+                    <a href="/index#tentang" class="text-gray-600 hover:text-violet-600 font-medium">Tentang Kami</a>
+                    <a href="/index#berita" class="text-gray-600 hover:text-violet-600 font-medium">Berita</a>
+                    <a href="/galeri" class="text-gray-600 hover:text-violet-600 font-medium">Galeri</a>
+                    <a href="/struktural" class="text-gray-600 hover:text-violet-600 font-medium">Struktural Kabinet</a>
+                    <a href="/kontak" class="text-gray-600 hover:text-violet-600 font-medium">Kontak</a>
                     <a href="/admin" id="login-btn" class="bg-violet-500 text-white px-3 py-1 rounded-md text-sm font-medium">Login</a>
                     <a href="/admin" id="dashboard-btn" class="hidden bg-green-500 text-white px-3 py-1 rounded-md text-sm font-medium">Dashboard</a>
                     <a href="#" id="logout-btn" class="hidden bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium">Logout</a>
-                    </div>
+                </div>
             </nav>
         </header>
 
@@ -162,18 +150,6 @@
             </div>
         </section>
 
-        <section id="galeri" class="py-16 px-4">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-10">Galeri</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <img src="https://placehold.co/400x400/805ad5/ffffff?text=Acara+1" alt="Galeri acara 1" class="rounded-lg shadow-md hover:shadow-xl transition-shadow">
-                    <img src="https://placehold.co/400x400/6b46c1/ffffff?text=Acara+2" alt="Galeri acara 2" class="rounded-lg shadow-md hover:shadow-xl transition-shadow">
-                    <img src="https://placehold.co/400x400/553c9a/ffffff?text=Acara+3" alt="Galeri acara 3" class="rounded-lg shadow-md hover:shadow-xl transition-shadow">
-                    <img src="https://placehold.co/400x400/44337a/ffffff?text=Acara+4" alt="Galeri acara 4" class="rounded-lg shadow-md hover:shadow-xl transition-shadow">
-                </div>
-            </div>
-        </section>
-
         <footer class="bg-gray-800 text-gray-400 py-6 px-4 text-center mt-auto">
             <p>&copy; 2024 BEM FKIP UMM Divisi Media & Komunikasi. Hak Cipta Dilindungi.</p>
         </footer>
@@ -210,21 +186,19 @@
         const addNewsBtnContainer = document.getElementById('add-news-btn-container');
         const logoutBtn = document.getElementById('logout-btn');
         const loginBtn = document.getElementById('login-btn');
-        const dashboardBtn = document.getElementById('dashboard-btn'); // New element
+        const dashboardBtn = document.getElementById('dashboard-btn');
         
         // --- Authentication State Checker ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is logged in
                 loginBtn.classList.add('hidden');
                 logoutBtn.classList.remove('hidden');
-                dashboardBtn.classList.remove('hidden'); // Show dashboard button
+                dashboardBtn.classList.remove('hidden');
                 addNewsBtnContainer.classList.remove('hidden');
             } else {
-                // User is logged out
                 loginBtn.classList.remove('hidden');
                 logoutBtn.classList.add('hidden');
-                dashboardBtn.classList.add('hidden'); // Hide dashboard button
+                dashboardBtn.classList.add('hidden');
                 addNewsBtnContainer.classList.add('hidden');
             }
         });
