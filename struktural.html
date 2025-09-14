@@ -10,7 +10,12 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .text-outline-violet { -webkit-text-stroke: 1px #7c3aed; }
-        /* (Other styles remain the same) */
+        .main-leader-box { position: relative; z-index: 10; }
+        .main-leader-box::after { content: ''; position: absolute; bottom: -3.5rem; left: 50%; transform: translateX(-50%); width: 2px; height: 3.5rem; background-color: #6b7280;}
+        .division-grid { position: relative; }
+        .division-grid::before { content: ''; position: absolute; top: -2.5rem; left: 10%; width: 80%; height: 2px; background-color: #6b7280; }
+        .division-card-container { position: relative; z-index: 10; }
+        .division-card-container::before { content: ''; position: absolute; top: -2.5rem; left: 50%; transform: translateX(-50%); width: 2px; height: 2.5rem; background-color: #6b7280; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -33,7 +38,15 @@
         </header>
 
         <section class="bg-violet-600 text-white py-16 px-4 text-center">
-            </section>
+            <div class="container mx-auto">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4">
+                    Struktur Kabinet
+                </h1>
+                <p class="text-lg sm:text-xl font-light max-w-2xl mx-auto">
+                    Mengenal para pemimpin dan anggota yang menggerakkan BEM FKIP UMM.
+                </p>
+            </div>
+        </section>
 
         <section id="struktur-konten" class="py-16 px-4 bg-gray-50">
             <div class="container mx-auto">
@@ -42,19 +55,16 @@
                 <div class="main-leader-box relative bg-violet-600 text-white rounded-xl shadow-lg p-6 text-center mb-16 mx-auto max-w-lg">
                     <h3 class="text-2xl font-bold mb-2">Gubernur Mahasiswa</h3>
                     <p id="gubernur" class="text-lg font-medium">Memuat...</p>
-                    <div class="mt-4">
-                        <h3 class="text-xl font-semibold mb-1">Wakil Gubernur Mahasiswa</h3>
-                        <p id="wakilGubernur" class="font-medium">Memuat...</p>
-                    </div>
+                    <div class="mt-4"><h3 class="text-xl font-semibold mb-1">Wakil Gubernur Mahasiswa</h3><p id="wakilGubernur" class="font-medium">Memuat...</p></div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                         <div><h4 class="text-lg font-semibold">Sekretaris Umum</h4><p id="sekretarisUmum">Memuat...</p></div>
                         <div><h4 class="text-lg font-semibold">Bendahara Umum</h4><p id="bendaharaUmum">Memuat...</p></div>
                     </div>
                 </div>
 
-                <div class="division-grid relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="division-grid relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     <div class="division-card-container relative flex flex-col items-center">
-                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full mb-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full h-full">
                             <h3 class="text-2xl font-bold mb-4 text-violet-600 text-outline-violet">MEDIA & KOMUNIKASI</h3>
                             <div class="mb-4"><p class="font-semibold">Ketua Bidang</p><p id="medkom_ketua">Memuat...</p></div>
                             <div class="mb-4"><p class="font-semibold">Sekretaris Bidang</p><p id="medkom_sekretaris">Memuat...</p></div>
@@ -62,7 +72,7 @@
                         </div>
                     </div>
                     <div class="division-card-container relative flex flex-col items-center">
-                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full mb-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full h-full">
                             <h3 class="text-2xl font-bold mb-4 text-violet-600 text-outline-violet">KEILMUAN DAN KASTRAT</h3>
                             <div class="mb-4"><p class="font-semibold">Ketua Bidang</p><p id="kastrat_ketua">Memuat...</p></div>
                             <div class="mb-4"><p class="font-semibold">Sekretaris Bidang</p><p id="kastrat_sekretaris">Memuat...</p></div>
@@ -70,7 +80,7 @@
                         </div>
                     </div>
                     <div class="division-card-container relative flex flex-col items-center">
-                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full mb-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full h-full">
                             <h3 class="text-2xl font-bold mb-4 text-violet-600 text-outline-violet">BAKAT DAN MINAT</h3>
                             <div class="mb-4"><p class="font-semibold">Ketua Bidang</p><p id="bakatminat_ketua">Memuat...</p></div>
                             <div class="mb-4"><p class="font-semibold">Sekretaris Bidang</p><p id="bakatminat_sekretaris">Memuat...</p></div>
@@ -78,11 +88,19 @@
                         </div>
                     </div>
                     <div class="division-card-container relative flex flex-col items-center">
-                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full mb-8">
-                            <h3 class="text-2xl font-bold mb-4 text-violet-600 text-outline-violet">KEAGAMAAN DAN KEHUMANITASAN</h3>
-                            <div class="mb-4"><p class="font-semibold">Ketua Bidang</p><p id="keagamaan_ketua">Memuat...</p></div>
-                            <div class="mb-4"><p class="font-semibold">Sekretaris Bidang</p><p id="keagamaan_sekretaris">Memuat...</p></div>
-                            <div class="mt-4"><p class="font-semibold mb-1 text-outline-violet">Anggota</p><div id="keagamaan_anggota" class="flex flex-col items-center justify-center"></div></div>
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full h-full">
+                            <h3 class="text-2xl font-bold mb-4 text-violet-600 text-outline-violet">KEAGAMAAN</h3>
+                            <div class="mb-4"><p class="font-semibold">Ketua Bidang</p><p id="agama_ketua">Memuat...</p></div>
+                            <div class="mb-4"><p class="font-semibold">Sekretaris Bidang</p><p id="agama_sekretaris">Memuat...</p></div>
+                            <div class="mt-4"><p class="font-semibold mb-1 text-outline-violet">Anggota</p><div id="agama_anggota" class="flex flex-col items-center justify-center"></div></div>
+                        </div>
+                    </div>
+                    <div class="division-card-container relative flex flex-col items-center">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center w-full h-full">
+                            <h3 class="text-2xl font-bold mb-4 text-violet-600 text-outline-violet">KEHUMANITASAN</h3>
+                            <div class="mb-4"><p class="font-semibold">Ketua Bidang</p><p id="humanis_ketua">Memuat...</p></div>
+                            <div class="mb-4"><p class="font-semibold">Sekretaris Bidang</p><p id="humanis_sekretaris">Memuat...</p></div>
+                            <div class="mt-4"><p class="font-semibold mb-1 text-outline-violet">Anggota</p><div id="humanis_anggota" class="flex flex-col items-center justify-center"></div></div>
                         </div>
                     </div>
                 </div>
@@ -111,26 +129,25 @@
 
         async function loadCabinet() {
             const docRef = doc(db, "cabinet", "current_cabinet");
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                
-                // Loop through all data and update the HTML
-                for (const key in data) {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        if (Array.isArray(data[key])) {
-                            // If it's an array (for members), create span for each name
-                            element.innerHTML = data[key].map(name => `<span>${name}</span>`).join('');
-                        } else {
-                            // Otherwise, just set the text content
-                            element.textContent = data[key];
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    for (const key in data) {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (Array.isArray(data[key])) {
+                                element.innerHTML = data[key].map(name => `<span>${name}</span>`).join('');
+                            } else {
+                                element.textContent = data[key];
+                            }
                         }
                     }
+                } else {
+                    console.log("Cabinet document does not exist!");
                 }
-            } else {
-                console.log("No such document!");
+            } catch (error) {
+                console.error("Error loading cabinet:", error);
             }
         }
 
