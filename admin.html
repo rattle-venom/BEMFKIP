@@ -47,12 +47,9 @@
 
         <div class="mb-8 border-b border-gray-200">
             <nav class="flex space-x-8" aria-label="Tabs">
-                <button id="tab-news" class="tab-btn text-violet-600 border-violet-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                    Kelola Berita
-                </button>
-                <button id="tab-gallery" class="tab-btn text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                    Kelola Galeri
-                </button>
+                <button id="tab-news" class="tab-btn text-violet-600 border-violet-600 py-4 px-1 border-b-2 font-medium text-sm">Kelola Berita</button>
+                <button id="tab-gallery" class="tab-btn text-gray-500 hover:text-gray-700 hover:border-gray-300 py-4 px-1 border-b-2 font-medium text-sm">Kelola Galeri</button>
+                <button id="tab-cabinet" class="tab-btn text-gray-500 hover:text-gray-700 hover:border-gray-300 py-4 px-1 border-b-2 font-medium text-sm">Kelola Kabinet</button>
             </nav>
         </div>
 
@@ -89,7 +86,7 @@
                 <div id="news-list-container" class="space-y-4 max-h-[32rem] overflow-y-auto"></div>
             </div>
         </div>
-
+        
         <div id="content-gallery" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Tambah Foto Baru</h2>
@@ -113,6 +110,54 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4">Kelola Galeri</h2>
                 <div id="gallery-list-container" class="space-y-4 max-h-[32rem] overflow-y-auto"></div>
+            </div>
+        </div>
+
+        <div id="content-cabinet" class="tab-content hidden">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4">Edit Struktur Kabinet</h2>
+                <p class="text-sm text-gray-500 mb-6">Ubah nama di bawah ini dan klik simpan. Untuk anggota, pisahkan setiap nama dengan koma (,).</p>
+                <form id="cabinet-form" class="space-y-6">
+                    <div class="p-4 border rounded-lg">
+                        <h3 class="font-semibold text-lg mb-2">Pimpinan Utama</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label for="gubernur" class="block text-sm font-medium text-gray-700">Gubernur</label><input type="text" id="gubernur" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="wakilGubernur" class="block text-sm font-medium text-gray-700">Wakil Gubernur</label><input type="text" id="wakilGubernur" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="sekretarisUmum" class="block text-sm font-medium text-gray-700">Sekretaris Umum</label><input type="text" id="sekretarisUmum" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="bendaharaUmum" class="block text-sm font-medium text-gray-700">Bendahara Umum</label><input type="text" id="bendaharaUmum" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 border rounded-lg space-y-2">
+                            <h3 class="font-semibold text-lg">Media & Komunikasi</h3>
+                            <div><label for="medkom_ketua" class="text-sm">Ketua</label><input type="text" id="medkom_ketua" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="medkom_sekretaris" class="text-sm">Sekretaris</label><input type="text" id="medkom_sekretaris" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="medkom_anggota" class="text-sm">Anggota</label><textarea id="medkom_anggota" class="mt-1 w-full p-2 border border-gray-300 rounded-md" rows="2"></textarea></div>
+                        </div>
+                        <div class="p-4 border rounded-lg space-y-2">
+                            <h3 class="font-semibold text-lg">Keilmuan dan Kastrat</h3>
+                            <div><label for="kastrat_ketua" class="text-sm">Ketua</label><input type="text" id="kastrat_ketua" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="kastrat_sekretaris" class="text-sm">Sekretaris</label><input type="text" id="kastrat_sekretaris" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="kastrat_anggota" class="text-sm">Anggota</label><textarea id="kastrat_anggota" class="mt-1 w-full p-2 border border-gray-300 rounded-md" rows="2"></textarea></div>
+                        </div>
+                        <div class="p-4 border rounded-lg space-y-2">
+                            <h3 class="font-semibold text-lg">Bakat dan Minat</h3>
+                            <div><label for="bakatminat_ketua" class="text-sm">Ketua</label><input type="text" id="bakatminat_ketua" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="bakatminat_sekretaris" class="text-sm">Sekretaris</label><input type="text" id="bakatminat_sekretaris" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="bakatminat_anggota" class="text-sm">Anggota</label><textarea id="bakatminat_anggota" class="mt-1 w-full p-2 border border-gray-300 rounded-md" rows="2"></textarea></div>
+                        </div>
+                        <div class="p-4 border rounded-lg space-y-2">
+                            <h3 class="font-semibold text-lg">Keagamaan dan Kehumanitasan</h3>
+                            <div><label for="keagamaan_ketua" class="text-sm">Ketua</label><input type="text" id="keagamaan_ketua" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="keagamaan_sekretaris" class="text-sm">Sekretaris</label><input type="text" id="keagamaan_sekretaris" class="mt-1 w-full p-2 border border-gray-300 rounded-md"></div>
+                            <div><label for="keagamaan_anggota" class="text-sm">Anggota</label><textarea id="keagamaan_anggota" class="mt-1 w-full p-2 border border-gray-300 rounded-md" rows="2"></textarea></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-6 py-2 font-semibold text-white bg-violet-600 rounded-md hover:bg-violet-700">Simpan Perubahan</button>
+                    </div>
+                </form>
+                <p id="cabinet-status" class="text-sm text-center text-green-600 mt-4"></p>
             </div>
         </div>
     </div>
@@ -151,7 +196,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAK2s6ex4tj7ycOPiEqb_bnatojCFCTMzg",
@@ -170,10 +215,8 @@
         const dashboardSection = document.getElementById('dashboard-section');
         const loginForm = document.getElementById('login-form');
         const logoutBtn = document.getElementById('logout-btn');
-        const tabNewsBtn = document.getElementById('tab-news');
-        const tabGalleryBtn = document.getElementById('tab-gallery');
-        const contentNews = document.getElementById('content-news');
-        const contentGallery = document.getElementById('content-gallery');
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
         const addNewsForm = document.getElementById('add-news-form');
         const successMessage = document.getElementById('success-message');
         const newsListContainer = document.getElementById('news-list-container');
@@ -183,20 +226,20 @@
         const addPhotoForm = document.getElementById('add-photo-form');
         const addPhotoStatus = document.getElementById('add-photo-status');
         const galleryListContainer = document.getElementById('gallery-list-container');
+        const cabinetForm = document.getElementById('cabinet-form');
+        const cabinetStatus = document.getElementById('cabinet-status');
 
         // --- TAB SWITCHING ---
-        tabNewsBtn.addEventListener('click', () => {
-            contentNews.classList.remove('hidden');
-            contentGallery.classList.add('hidden');
-            tabNewsBtn.classList.add('text-violet-600', 'border-violet-600');
-            tabGalleryBtn.classList.remove('text-violet-600', 'border-violet-600');
-        });
-        tabGalleryBtn.addEventListener('click', () => {
-            contentNews.classList.add('hidden');
-            contentGallery.classList.remove('hidden');
-            tabNewsBtn.classList.remove('text-violet-600', 'border-violet-600');
-            tabGalleryBtn.classList.add('text-violet-600', 'border-violet-600');
-            loadGalleryForAdmin();
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('text-violet-600', 'border-violet-600'));
+                contents.forEach(c => c.classList.add('hidden'));
+                tab.classList.add('text-violet-600', 'border-violet-600');
+                const contentId = `content-${tab.id.split('-')[1]}`;
+                document.getElementById(contentId).classList.remove('hidden');
+                if (tab.id === 'tab-gallery') loadGalleryForAdmin();
+                if (tab.id === 'tab-cabinet') loadCabinetData();
+            });
         });
 
         // --- AUTHENTICATION ---
@@ -222,12 +265,9 @@
         addNewsForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const newsData = {
-                title: e.target.elements['news-title-input'].value,
-                content: e.target.elements['news-content-input'].value,
-                imageUrl: e.target.elements['news-image-url-input'].value,
-                category: e.target.elements['news-category-input'].value,
-                author: 'BEM FKIP',
-                date: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
+                title: e.target.elements['news-title-input'].value, content: e.target.elements['news-content-input'].value,
+                imageUrl: e.target.elements['news-image-url-input'].value, category: e.target.elements['news-category-input'].value,
+                author: 'BEM FKIP', date: new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
             };
             try {
                 await addDoc(collection(db, "news"), newsData);
@@ -252,13 +292,10 @@
             const newsId = e.target.dataset.id;
             if (!newsId) return;
             if (e.target.classList.contains('delete-btn')) {
-                if (confirm("Yakin ingin menghapus berita ini?")) {
-                    await deleteDoc(doc(db, "news", newsId));
-                }
+                if (confirm("Yakin ingin menghapus berita ini?")) { await deleteDoc(doc(db, "news", newsId)); }
             }
             if (e.target.classList.contains('edit-btn')) {
-                const docRef = doc(db, "news", newsId);
-                const docSnap = await getDoc(docRef);
+                const docSnap = await getDoc(doc(db, "news", newsId));
                 if (docSnap.exists()) {
                     const news = docSnap.data();
                     editNewsForm.elements['edit-news-id'].value = newsId;
@@ -274,10 +311,8 @@
             e.preventDefault();
             const newsId = e.target.elements['edit-news-id'].value;
             const updatedData = {
-                title: e.target.elements['edit-news-title'].value,
-                content: e.target.elements['edit-news-content'].value,
-                imageUrl: e.target.elements['edit-news-image'].value,
-                category: e.target.elements['edit-news-category'].value,
+                title: e.target.elements['edit-news-title'].value, content: e.target.elements['edit-news-content'].value,
+                imageUrl: e.target.elements['edit-news-image'].value, category: e.target.elements['edit-news-category'].value,
             };
             await updateDoc(doc(db, "news", newsId), updatedData);
             editNewsModal.classList.add('hidden');
@@ -288,8 +323,7 @@
         addPhotoForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const photoData = {
-                imageUrl: e.target.elements['photo-url-input'].value,
-                caption: e.target.elements['photo-caption-input'].value,
+                imageUrl: e.target.elements['photo-url-input'].value, caption: e.target.elements['photo-caption-input'].value,
                 uploadedAt: new Date()
             };
             try {
@@ -313,10 +347,43 @@
         }
         galleryListContainer.addEventListener('click', async (e) => {
             if (e.target.classList.contains('delete-photo-btn')) {
-                if (confirm("Yakin ingin menghapus foto ini?")) {
-                    await deleteDoc(doc(db, "gallery", e.target.dataset.id));
-                }
+                if (confirm("Yakin ingin menghapus foto ini?")) { await deleteDoc(doc(db, "gallery", e.target.dataset.id)); }
             }
+        });
+
+        // --- CABINET MANAGEMENT ---
+        const cabinetDocRef = doc(db, "cabinet", "current_cabinet");
+        async function loadCabinetData() {
+            cabinetStatus.textContent = "Memuat data...";
+            try {
+                const docSnap = await getDoc(cabinetDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    for (const key in data) {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (Array.isArray(data[key])) { element.value = data[key].join(', '); }
+                            else { element.value = data[key]; }
+                        }
+                    }
+                    cabinetStatus.textContent = "";
+                } else { cabinetStatus.textContent = "Dokumen kabinet tidak ditemukan."; }
+            } catch (error) { console.error("Error loading cabinet data:", error); }
+        }
+        cabinetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const updatedData = {};
+            const inputs = cabinetForm.querySelectorAll('input[type="text"], textarea');
+            inputs.forEach(input => {
+                if (input.tagName.toLowerCase() === 'textarea') {
+                    updatedData[input.id] = input.value.split(',').map(item => item.trim()).filter(item => item);
+                } else { updatedData[input.id] = input.value; }
+            });
+            try {
+                await setDoc(cabinetDocRef, updatedData);
+                cabinetStatus.textContent = "Struktur kabinet berhasil diperbarui!";
+                setTimeout(() => { cabinetStatus.textContent = '' }, 3000);
+            } catch (error) { cabinetStatus.textContent = "Gagal memperbarui data."; }
         });
     </script>
 </body>
